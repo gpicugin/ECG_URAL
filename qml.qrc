@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/main.qml</file>
+        <file>qml/ECGFrame.qml</file>
+        <file>qml/ECGChart.qml</file>
+        <file>qml/StyleSettings.qml</file>
     </qresource>
 </RCC>

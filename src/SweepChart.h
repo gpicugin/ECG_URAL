@@ -20,9 +20,9 @@ inline double timeAxisRange_s(int n_points, double sampleRate)
 
 struct InitialParamsOfChart
 {
-    qreal ppi = 94;// QGuiApplication::primaryScreen()->physicalDotsPerInch();
-    double sampleRate_hz = 1;
-    double minSweep_mm_per_s = 1;
+    qreal ppi = QGuiApplication::primaryScreen()->physicalDotsPerInch();
+    double sampleRate_hz = 150;
+    double minSweep_mm_per_s = 25;
 };
 
 class SweepChart : public QObject

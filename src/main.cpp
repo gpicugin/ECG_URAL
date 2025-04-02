@@ -1,6 +1,7 @@
 #include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QtQml>
 #include "AppEngine.h"
 
 int main(int argc, char *argv[])
@@ -9,6 +10,9 @@ int main(int argc, char *argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
     QApplication app(argc, argv);
+
+    qmlRegisterSingletonType(QUrl("qrc:/qml/StyleSettings.qml"), "StyleSettings", 1, 0, "Style");
+
 
 
     QQmlApplicationEngine engine;
