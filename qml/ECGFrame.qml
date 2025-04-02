@@ -10,6 +10,7 @@ Rectangle {
     RowLayout
     {
         anchors.fill: parent
+        spacing: 0
         Repeater
         {
             model : 2

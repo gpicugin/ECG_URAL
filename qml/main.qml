@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
+import StyleSettings 1.0
 
 Window {
     width: 640
@@ -7,7 +8,9 @@ Window {
     visible: true
     title: qsTr("Hello World")
 
+
     ECGFrame {
+        color: Style.colorBackGraphECG
         anchors.fill: parent
     }
 }

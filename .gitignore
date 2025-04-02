@@ -4,3 +4,5 @@ build/
 Makefile.Release
 
 Makefile.Debug
+
+ECG_URAL.pro.user
