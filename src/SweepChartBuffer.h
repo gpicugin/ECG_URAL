@@ -29,7 +29,7 @@ private:
     int     m_numDisplayPoints = 0;
     int     m_startPos         = 0;
     int     m_numNewPoints     = 0;
-    double  m_defaultValue;
+    double  m_defaultValue     = 1.5;
 };
 
 #endif // SWEEPCHARTBUFFER_H

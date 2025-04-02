@@ -60,7 +60,7 @@ void SweepChartBuffer::setNumDisplayPoints(int size)
 bool SweepChartBuffer::shiftBuffer(int shift)
 {
     int currPos = getCurrentPos();
-    m_numNewPoints = mod_non_negative( shift + m_numNewPoints, m_numDisplayPoints);
+    m_numNewPoints = mod_non_negative(shift + m_numNewPoints, m_numDisplayPoints);
     m_startPos = mod_non_negative(currPos - m_numNewPoints + 1, m_Points.size());
 
     return !m_numNewPoints;
