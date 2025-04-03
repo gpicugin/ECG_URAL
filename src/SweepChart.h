@@ -21,8 +21,8 @@ inline double timeAxisRange_s(int n_points, double sampleRate)
 struct InitialParamsOfChart
 {
     qreal ppi = QGuiApplication::primaryScreen()->physicalDotsPerInch();
-    double sampleRate_hz = 150;
-    double minSweep_mm_per_s = 25;
+    double sampleRate_hz = 1;
+    double minSweep_mm_per_s = 1;
 };
 
 class SweepChart : public QObject
@@ -51,9 +51,12 @@ protected:
     int               m_size               = 1; // количество точек при мин разверстке
     double            m_ppi                = 0;
     double            m_sweepRate_mmPerSec = 25;
+    double            m_sensitivity_mmPermV= 20;
+
     double            m_minSweep_mmPerSec  = 0;
     double            m_sampleRate_hz      = 0;
     double            m_width_n_pixels     = 0;
+    double            m_height_n_pixels    = 0;
     double            m_displayRange       = 0;
     double            m_PixelSize          = 0;
     bool              m_isEnable           = true;
@@ -65,11 +68,14 @@ private:
     double  m_xAxisInterval = 1.0;
     double  m_xUpperLimit   = 0.0;
     double  m_xLowerLimit   = 0.0;
+    double  m_yUpperLimit   = 0.0;
+    double  m_yLowerLimit   = 0.0;
     int     m_currentIndex  = 0;
     int     m_startIndex    = 0;
 
 private:
     void recalculateX();
+    void recalculateY();
 
 public slots:
     void pushData(QQueue<double> *data);
@@ -78,6 +84,8 @@ public slots:
     void enableChannel(bool enable);
     int  getLine(QtCharts::QLineSeries *lineSeries1, QtCharts::QLineSeries *lineSeries2);
     double onXAxisWidthChanged(int pixels);
+    double onYAxisWidthChanged(int pixels);
+
     void onSweepRateChanged(double mm_per_s);
 
 signals:

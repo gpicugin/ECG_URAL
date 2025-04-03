@@ -96,6 +96,7 @@ ChartView {
     Component.onCompleted : {
         engine = appEngine.getSweepChart(parent.sweepIndex)
         _axisX.max = engine.onXAxisWidthChanged(_view.plotArea.width)
+        _axisY.max = engine.onYAxisWidthChanged(_view.plotArea.height)
     }
 
     Connections
@@ -105,20 +106,13 @@ ChartView {
         function onChartDataChanged()
         {
             var index = engine.getLine(_LineSeries1, _LineSeries2)
+            var space = 100
 
-            print(index)
+            if(_LineSeries1.count >= space)
+                _LineSeries1.removePoints(_LineSeries1.count - space, space)
 
-            _cursorLine.clear()
-
-            var space = _axisX.max / 50
-
-            if(index < _LineSeries1.count - space)
-            {
-                var point = _LineSeries1.at(index - 1)
-                _cursorLine.append(point.x, _axisY.max)
-
-                _cursorLine.append(point.x + (space), _axisY.max)
-            }
+            if(_LineSeries2.count >= space)
+                _LineSeries2.removePoints(0, space)
         }
 
         function onClearChart()

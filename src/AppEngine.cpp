@@ -1,5 +1,5 @@
 #include "AppEngine.h"
-
+#include "QtMath"
 AppEngine::AppEngine(QObject *parent)
     : QObject{parent}
 {
@@ -7,13 +7,12 @@ AppEngine::AppEngine(QObject *parent)
 
     InitialParamsOfChart params;
     params.ppi = QGuiApplication::primaryScreen()->physicalDotsPerInch();
-    params.sampleRate_hz = 500;
+    params.sampleRate_hz = 150;
     params.minSweep_mm_per_s = 25;
 
     for(auto& channel : channels)
     {
         channel.chart = new SweepChart(this, &params);
-        channel.buffer = new QQueue<double>;
     }
 
     COMEmulationTimer = new QTimer;
@@ -30,7 +29,6 @@ AppEngine::~AppEngine()
     for(auto& channel : channels)
     {
         delete channel.chart;
-        delete channel.buffer;
     }
 
     delete COMEmulationTimer;
@@ -47,8 +45,8 @@ AppEngine::pushData()
     for(auto& channel : channels)
     {
         for(int i = 0; i < 150; i++)
-            channel.buffer->enqueue(i % 5);
+            channel.buffer.enqueue( qSin(2*3.14*i/150.)+1);
 
-        channel.chart->pushData(channel.buffer);
+        channel.chart->pushData(&channel.buffer);
     }
 }

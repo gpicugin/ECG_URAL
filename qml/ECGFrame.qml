@@ -9,21 +9,19 @@ Rectangle {
 
     GridLayout {
         id: _grid
-        columns: 2
+        columns: 1
         anchors.fill: parent
         Repeater
         {
-            model: 6
+            id: _rep
+            property int count: 1
+            model: count
             delegate: ECGChart
             {
-                width: _mainWindow.width / 2
-                height: _mainWindow.height / 3
+                width: _mainWindow.width / _grid.columns
+                height: _mainWindow.height / (_rep.count / _grid.columns)
                 sweepIndex: index
             }
         }
-    }
-    Component.onCompleted : {
-        print(width)
-        print(height)
     }
 }

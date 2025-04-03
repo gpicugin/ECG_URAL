@@ -7,7 +7,7 @@
 
 struct Sweep {
     SweepChart* chart;
-    QQueue<double>* buffer;
+    QQueue<double> buffer;
 };
 
 enum ECG_channels {
