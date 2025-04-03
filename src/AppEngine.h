@@ -29,11 +29,13 @@ public:
 
 public slots:
     SweepChart *getSweepChart(int index);
+    void updateScreen();
 
 private:
     QVector<Sweep> channels;
 
     QTimer* COMEmulationTimer;
+    QTimer* screenTimer;
 
 private slots:
     pushData();

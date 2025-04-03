@@ -3,7 +3,7 @@
 AppEngine::AppEngine(QObject *parent)
     : QObject{parent}
 {
-    channels.resize(ECG_channels::size);
+    channels.resize(1);
 
     InitialParamsOfChart params;
     params.ppi = QGuiApplication::primaryScreen()->physicalDotsPerInch();
@@ -17,11 +17,19 @@ AppEngine::AppEngine(QObject *parent)
 
     COMEmulationTimer = new QTimer;
 
-    COMEmulationTimer->setInterval(1000);
+    screenTimer = new QTimer;
+
+
+    COMEmulationTimer->setInterval(40);
+
+    screenTimer->setInterval(40);
 
     connect(COMEmulationTimer, QTimer::timeout, this, AppEngine::pushData);
+    connect(screenTimer, QTimer::timeout, this, AppEngine::updateScreen);
+
 
     COMEmulationTimer->start();
+    screenTimer->start();
 }
 
 AppEngine::~AppEngine()
@@ -32,6 +40,7 @@ AppEngine::~AppEngine()
     }
 
     delete COMEmulationTimer;
+    delete screenTimer;
 }
 
 SweepChart* AppEngine::getSweepChart(int index)
@@ -40,13 +49,23 @@ SweepChart* AppEngine::getSweepChart(int index)
         return channels[index].chart;
 }
 
+void AppEngine::updateScreen()
+{
+    for(auto& channel : channels) {
+        if(!channel.buffer.isEmpty())
+            channel.chart->pushData(&channel.buffer);
+    }
+}
+
+static int j = 0;
+
 AppEngine::pushData()
 {
-    for(auto& channel : channels)
+    //for(auto& channel : channels)
     {
-        for(int i = 0; i < 150; i++)
-            channel.buffer.enqueue( qSin(2*3.14*i/150.)+1);
-
-        channel.chart->pushData(&channel.buffer);
+        for(int i = 0; i < 6; i++,j++)
+        {
+            channels[0].buffer.enqueue( qSin(2*3.14*j/150.) + 1.);
+        }
     }
 }
