@@ -7,26 +7,23 @@ import QtQuick.Layouts 1.15
 Rectangle {
     id: _ECGFrame
 
-    RowLayout
-    {
+    GridLayout {
+        id: _grid
+        columns: 2
         anchors.fill: parent
-        spacing: 0
         Repeater
         {
-            model : 2
-            ColumnLayout
+            model: 6
+            delegate: ECGChart
             {
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                spacing: 0
-                Repeater {
-                    model: 3
-                    delegate: ECGChart {
-                        Layout.fillHeight: true
-                        Layout.fillWidth: true
-                    }
-                }
+                width: _mainWindow.width / 2
+                height: _mainWindow.height / 3
+                sweepIndex: index
             }
         }
+    }
+    Component.onCompleted : {
+        print(width)
+        print(height)
     }
 }

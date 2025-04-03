@@ -25,6 +25,10 @@ class AppEngine : public QObject
     Q_OBJECT
 public:
     explicit AppEngine(QObject *parent = nullptr);
+    ~AppEngine();
+
+public slots:
+    SweepChart *getSweepChart(int index);
 
 private:
     QVector<Sweep> channels;

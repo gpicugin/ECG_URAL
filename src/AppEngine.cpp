@@ -6,6 +6,9 @@ AppEngine::AppEngine(QObject *parent)
     channels.resize(ECG_channels::size);
 
     InitialParamsOfChart params;
+    params.ppi = QGuiApplication::primaryScreen()->physicalDotsPerInch();
+    params.sampleRate_hz = 500;
+    params.minSweep_mm_per_s = 25;
 
     for(auto& channel : channels)
     {
@@ -20,6 +23,23 @@ AppEngine::AppEngine(QObject *parent)
     connect(COMEmulationTimer, QTimer::timeout, this, AppEngine::pushData);
 
     COMEmulationTimer->start();
+}
+
+AppEngine::~AppEngine()
+{
+    for(auto& channel : channels)
+    {
+        delete channel.chart;
+        delete channel.buffer;
+    }
+
+    delete COMEmulationTimer;
+}
+
+SweepChart* AppEngine::getSweepChart(int index)
+{
+    if(index < channels.size())
+        return channels[index].chart;
 }
 
 AppEngine::pushData()

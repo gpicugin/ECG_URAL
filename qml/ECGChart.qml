@@ -3,8 +3,14 @@ import QtQuick.Controls 2.0
 import QtCharts 2.15
 import QtQuick.Layouts 1.15
 import StyleSettings 1.0
+import SweepChart 1.0
 
 ChartView {
+    id: _view
+
+    property int sweepIndex
+
+    property SweepChart engine
 
     margins { right: 0; bottom: 0; left: 0; top: 0 }
 
@@ -23,7 +29,6 @@ ChartView {
         tickType: ValueAxis.TicksDynamic
         tickAnchor: 0
 
-        max: 11.45
         tickInterval: 4
         minorTickCount: 3
 
@@ -46,7 +51,7 @@ ChartView {
         tickAnchor: 0
 
         //критичный параметр
-        max: 3.9
+        max: 4
         minorTickCount: 4
         tickInterval: 5
 
@@ -58,7 +63,7 @@ ChartView {
         labelsColor:        Style.colorTextLabelGraphECG_Y
         gridLineColor:      Style.colorGridLaynerECG
         minorGridLineColor: Style.colorGridLaynerECG
-        titleBrush:         Style.colorTextLabelGraphCO2
+        titleBrush:         Style.colorTextLabelGraphECG
     }
 
     LineSeries {
@@ -88,18 +93,20 @@ ChartView {
             color: Style.colorBackGraphECG
         }
     }
-
-    // Component.onCompleted: {
-    //     _axisX.max = GraphSPO2.onXAxisWidthChanged(_graphSPO2.plotArea.width)
-    // }
+    Component.onCompleted : {
+        engine = appEngine.getSweepChart(parent.sweepIndex)
+        _axisX.max = engine.onXAxisWidthChanged(_view.plotArea.width)
+    }
 
     Connections
     {
-        target: GraphSPO2
+        target: engine
 
         function onChartDataChanged()
         {
-            var index = GraphSPO2.getLine(_LineSeries1, _LineSeries2)
+            var index = engine.getLine(_LineSeries1, _LineSeries2)
+
+            print(index)
 
             _cursorLine.clear()
 
@@ -112,11 +119,6 @@ ChartView {
 
                 _cursorLine.append(point.x + (space), _axisY.max)
             }
-        }
-
-        function onSetHSweepSPO2Changed(displayRange)
-        {
-            _axisX.max = displayRange
         }
 
         function onClearChart()
