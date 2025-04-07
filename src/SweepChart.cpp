@@ -4,7 +4,8 @@
 SweepChart::SweepChart(QObject *parent, InitialParamsOfChart* params)
     :   m_minSweep_mmPerSec(params->minSweep_mm_per_s),
         m_xAxisInterval(1 / params->sampleRate_hz),
-        m_ppi(params->ppi)
+        m_ppi_x(params->ppi_x),
+        m_ppi_y(params->ppi_y)
 {
     // qDebug() << m_xAxisInterval;
     m_pPoints = new QVector<QPointF>;    
@@ -88,7 +89,7 @@ void SweepChart::recalculateX()
 
     // qDebug() << m_width_n_pixels << m_ppi << m_sweepRate_mmPerSec << m_xLowerLimit;
 
-    m_xUpperLimit = (m_width_n_pixels - 1) / m_ppi * 25.4 / m_sweepRate_mmPerSec + m_xLowerLimit;
+    m_xUpperLimit = (m_width_n_pixels - 1) / m_ppi_x * 25.4 / m_sweepRate_mmPerSec + m_xLowerLimit;
 
     m_numDisplayPoints = qCeil((m_xUpperLimit - m_xLowerLimit) / m_xAxisInterval) + 2;
 
@@ -104,9 +105,7 @@ void SweepChart::recalculateY()
 {
     m_yLowerLimit = m_origin.y();
 
-    // qDebug() << m_width_n_pixels << m_ppi << m_sweepRate_mmPerSec << m_xLowerLimit;
-
-    m_yUpperLimit = (m_height_n_pixels - 1) / m_ppi * 25.4 / m_sensitivity_mmPermV + m_yLowerLimit;
+    m_yUpperLimit = (m_height_n_pixels - 1) / m_ppi_y * 25.4 / m_sensitivity_mmPermV + m_yLowerLimit;
 }
 
 void SweepChart::startUpdateChart()
@@ -186,7 +185,7 @@ void SweepChart::pushData(QQueue<double> *data)
         (*m_pPoints).append(point);
 
         for(int i = 0; i < data->size(); i++)
-            emit onRollOver();
+            emit rollOver();
 
         emit chartDataChanged();
 
@@ -197,7 +196,7 @@ void SweepChart::pushData(QQueue<double> *data)
     {
         if(m_currentIndex == 0 && m_pPoints->size() != 0)
         {
-            emit onRollOver();
+            emit rollOver();
         }
 
         if(m_pPoints->size() <= m_currentIndex)
@@ -218,8 +217,6 @@ void SweepChart::pushData(QQueue<double> *data)
 
 int SweepChart::getLine(QtCharts::QLineSeries *lineSeries1, QtCharts::QLineSeries *lineSeries2)
 {
-    qDebug() << __PRETTY_FUNCTION__;
-
     if(lineSeries1 == nullptr || lineSeries2 == nullptr) {
         qDebug() << "return 0";
         return 0;

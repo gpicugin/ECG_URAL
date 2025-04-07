@@ -20,7 +20,8 @@ inline double timeAxisRange_s(int n_points, double sampleRate)
 
 struct InitialParamsOfChart
 {
-    qreal ppi = QGuiApplication::primaryScreen()->physicalDotsPerInch();
+    qreal ppi_x = QGuiApplication::primaryScreen()->physicalDotsPerInchX();
+    qreal ppi_y = QGuiApplication::primaryScreen()->physicalDotsPerInchY();
     double sampleRate_hz = 1;
     double minSweep_mm_per_s = 1;
 };
@@ -36,7 +37,6 @@ public:
     double  getXLowerLimit() const;
     double  getYUpperLimit() const;
     double  getYLowerLimit() const;
-    int     getNumDisplayPoints() const;
     int     getSize()             const;
     double  getXAxisInterval()    const;
     void    xShiftTo(double xCoord);
@@ -49,7 +49,8 @@ protected:
 protected:
     QVector<QPointF>* m_pPoints            = nullptr;
     int               m_size               = 1; // количество точек при мин разверстке
-    double            m_ppi                = 0;
+    double            m_ppi_x              = 0;
+    double            m_ppi_y              = 0;
     double            m_sweepRate_mmPerSec = 25;
     double            m_sensitivity_mmPermV= 20;
 
@@ -85,13 +86,14 @@ public slots:
     int  getLine(QtCharts::QLineSeries *lineSeries1, QtCharts::QLineSeries *lineSeries2);
     double onXAxisWidthChanged(int pixels);
     double onYAxisWidthChanged(int pixels);
+    int getNumDisplayPoints() const;
 
     void onSweepRateChanged(double mm_per_s);
 
 signals:
     void clearChart();
     void chartDataChanged();
-    void onRollOver();
+    void rollOver();
 };
 
 #endif // SWEEPCHART_H

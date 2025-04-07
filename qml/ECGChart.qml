@@ -25,12 +25,13 @@ ChartView {
         id: _axisX
 
         min: 0
+        max: 2
 
         tickType: ValueAxis.TicksDynamic
         tickAnchor: 0
 
-        tickInterval: 4
         minorTickCount: 3
+        tickInterval: 4
 
         labelFormat: "%d c"
         labelsFont.pixelSize: Style.fontSizeLabelGraph
@@ -52,18 +53,18 @@ ChartView {
 
         //критичный параметр
         max: 4
-        minorTickCount: 4
-        tickInterval: 5
+        minorTickCount: 0
+        tickInterval: 1
 
         //нужно для выравнивания графиков
-        labelFormat: "%d0"
+        labelFormat: "%d"
 
         labelsFont.pixelSize: Style.fontSizeLabelGraph
 
-        labelsColor:        Style.colorTextLabelGraphECG_Y
+        labelsColor:        Style.colorTextLabelGraphECG_X
         gridLineColor:      Style.colorGridLaynerECG
         minorGridLineColor: Style.colorGridLaynerECG
-        titleBrush:         Style.colorTextLabelGraphECG
+        titleBrush:         Style.colorTextLabelGraphECG_X
     }
 
     LineSeries {
@@ -99,6 +100,15 @@ ChartView {
         _axisY.max = engine.onYAxisWidthChanged(_view.plotArea.height)
     }
 
+    onWidthChanged: {
+        _axisX.max = engine.onXAxisWidthChanged(_view.plotArea.width)
+    }
+
+    onHeightChanged: {
+        _axisY.max = engine.onYAxisWidthChanged(_view.plotArea.height)
+
+    }
+
     Connections
     {
         target: engine
@@ -106,7 +116,7 @@ ChartView {
         function onChartDataChanged()
         {
             var index = engine.getLine(_LineSeries1, _LineSeries2)
-            var space = 100
+            var space = 50
 
             if(_LineSeries1.count >= space)
                 _LineSeries1.removePoints(_LineSeries1.count - space, space)

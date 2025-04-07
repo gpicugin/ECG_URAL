@@ -6,7 +6,9 @@ AppEngine::AppEngine(QObject *parent)
     channels.resize(1);
 
     InitialParamsOfChart params;
-    params.ppi = QGuiApplication::primaryScreen()->physicalDotsPerInch();
+    params.ppi_x = QGuiApplication::primaryScreen()->physicalDotsPerInchX();
+    params.ppi_y = QGuiApplication::primaryScreen()->physicalDotsPerInchY();
+
     params.sampleRate_hz = 150;
     params.minSweep_mm_per_s = 25;
 
@@ -65,7 +67,7 @@ AppEngine::pushData()
     {
         for(int i = 0; i < 6; i++,j++)
         {
-            channels[0].buffer.enqueue( qSin(2*3.14*j/150.) + 1.);
+            channels[0].buffer.enqueue( qSin(2*3.14*j/150.) + 6);
         }
     }
 }
