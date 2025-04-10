@@ -17,9 +17,9 @@ Rectangle {
             property int count: 1
             model: count
             delegate: ECGChart
-            {
-                width: _mainWindow.width / _grid.columns
-                height: _mainWindow.height / (_rep.count / _grid.columns)
+            {               
+                Layout.fillWidth: true
+                Layout.fillHeight: true
                 sweepIndex: index
             }
         }

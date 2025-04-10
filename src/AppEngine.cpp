@@ -6,8 +6,8 @@ AppEngine::AppEngine(QObject *parent)
     channels.resize(1);
 
     InitialParamsOfChart params;
-    params.ppi_x = QGuiApplication::primaryScreen()->physicalDotsPerInchX();
-    params.ppi_y = QGuiApplication::primaryScreen()->physicalDotsPerInchY();
+    params.ppi_x = QGuiApplication::primaryScreen()->logicalDotsPerInchX();
+    params.ppi_y = QGuiApplication::primaryScreen()->logicalDotsPerInchY();
 
     params.sampleRate_hz = 150;
     params.minSweep_mm_per_s = 25;
@@ -18,19 +18,25 @@ AppEngine::AppEngine(QObject *parent)
     }
 
     COMEmulationTimer = new QTimer;
-
+    COMTimer = new QTimer;
     screenTimer = new QTimer;
+
+    port = new SerialPort;
 
 
     COMEmulationTimer->setInterval(40);
-
+    COMTimer->setInterval(40);
     screenTimer->setInterval(40);
 
-    connect(COMEmulationTimer, QTimer::timeout, this, AppEngine::pushData);
+    connect(COMTimer, QTimer::timeout, port, SerialPort::readData);
     connect(screenTimer, QTimer::timeout, this, AppEngine::updateScreen);
+    connect(port, SerialPort::packageChanged, this, AppEngine::pushData);
+
+    port->connectSerialPort();
 
 
     COMEmulationTimer->start();
+    COMTimer->start();
     screenTimer->start();
 }
 
@@ -42,7 +48,9 @@ AppEngine::~AppEngine()
     }
 
     delete COMEmulationTimer;
+    delete COMTimer;
     delete screenTimer;
+    delete port;
 }
 
 SweepChart* AppEngine::getSweepChart(int index)
@@ -61,13 +69,18 @@ void AppEngine::updateScreen()
 
 static int j = 0;
 
-AppEngine::pushData()
+void AppEngine::pushData(QVector<int> package)
 {
-    //for(auto& channel : channels)
+    // //for(auto& channel : channels)
+    // {
+    //     for(int i = 0; i < 6; i++,j++)
+    //     {
+    //         channels[0].buffer.enqueue( qSin(2*3.14*j/150.) + 6);
+    //     }
+    // }
+    qDebug() << package.size();
+    for(auto number : package)
     {
-        for(int i = 0; i < 6; i++,j++)
-        {
-            channels[0].buffer.enqueue( qSin(2*3.14*j/150.) + 6);
-        }
+        channels[0].buffer.enqueue(number);
     }
 }

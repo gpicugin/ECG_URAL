@@ -56,7 +56,7 @@ protected:
 
     double            m_minSweep_mmPerSec  = 0;
     double            m_sampleRate_hz      = 0;
-    double            m_width_n_pixels     = 0;
+    double            m_width_n_pixels     = 0.0;
     double            m_height_n_pixels    = 0;
     double            m_displayRange       = 0;
     double            m_PixelSize          = 0;

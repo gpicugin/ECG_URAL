@@ -2,6 +2,7 @@
 #define APPENGINE_H
 #include "SweepChart.h"
 #include "SweepChartBuffer.h"
+#include "serialport.h"
 #include <QTimer>
 #include <QObject>
 
@@ -35,10 +36,12 @@ private:
     QVector<Sweep> channels;
 
     QTimer* COMEmulationTimer;
+    QTimer* COMTimer;
     QTimer* screenTimer;
+    SerialPort* port;
 
 private slots:
-    pushData();
+    void pushData(QVector<int> package);
 
 signals:
 };

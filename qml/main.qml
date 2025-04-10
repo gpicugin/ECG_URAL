@@ -4,8 +4,8 @@ import StyleSettings 1.0
 
 Window {
     id: _mainWindow
-    width: 1270
-    height: 960
+    width: Screen.width / 2
+    height: Screen.height / 2
     visible: true
     title: qsTr("Hello World")
 

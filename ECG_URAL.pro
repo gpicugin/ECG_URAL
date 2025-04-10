@@ -7,14 +7,17 @@ QT += quick gui core widgets qml charts serialport multimedia
 HEADERS += \
     src/AppEngine.h \
     src/SweepChart.h \
-    src/SweepChartBuffer.h
+    src/SweepChartBuffer.h \
+    src/serialport.h
 
 
-SOURCES += \        
-        src/AppEngine.cpp \
-        src/SweepChart.cpp \
-        src/SweepChartBuffer.cpp \
-        src/main.cpp
+SOURCES += \
+    src/AppEngine.cpp \
+    src/SweepChart.cpp \
+    src/SweepChartBuffer.cpp \
+    src/main.cpp \
+    src/serialport.cpp
+
 
 RESOURCES += qml.qrc
 

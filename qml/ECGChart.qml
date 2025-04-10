@@ -96,6 +96,7 @@ ChartView {
     }
     Component.onCompleted : {
         engine = appEngine.getSweepChart(parent.sweepIndex)
+        print(_view.plotArea.width)
         _axisX.max = engine.onXAxisWidthChanged(_view.plotArea.width)
         _axisY.max = engine.onYAxisWidthChanged(_view.plotArea.height)
     }
@@ -116,7 +117,7 @@ ChartView {
         function onChartDataChanged()
         {
             var index = engine.getLine(_LineSeries1, _LineSeries2)
-            var space = 50
+            var space = 25
 
             if(_LineSeries1.count >= space)
                 _LineSeries1.removePoints(_LineSeries1.count - space, space)

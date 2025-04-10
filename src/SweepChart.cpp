@@ -87,18 +87,17 @@ void SweepChart::recalculateX()
 {
     m_xLowerLimit = m_origin.x();
 
-    // qDebug() << m_width_n_pixels << m_ppi << m_sweepRate_mmPerSec << m_xLowerLimit;
+    // qDebug() << m_width_n_pixels << m_ppi_x << m_sweepRate_mmPerSec << m_xLowerLimit;
 
-    m_xUpperLimit = (m_width_n_pixels - 1) / m_ppi_x * 25.4 / m_sweepRate_mmPerSec + m_xLowerLimit;
+    // double sweepRate_dPerSec = m_sweepRate_mmPerSec / 25.4;
 
-    m_numDisplayPoints = qCeil((m_xUpperLimit - m_xLowerLimit) / m_xAxisInterval) + 2;
+    m_xUpperLimit = (m_width_n_pixels / m_ppi_x * 25.4 / m_sweepRate_mmPerSec); // + m_xLowerLimit;
 
-    // qDebug() << m_numDisplayPoints;
+    //m_xUpperLimit /= 25;
 
-    while((m_numDisplayPoints - 1) * m_xAxisInterval - m_xUpperLimit > m_xAxisInterval)
-        m_numDisplayPoints--;
+    // qDebug() << m_xUpperLimit;
 
-    m_xUpperLimit = (m_numDisplayPoints - 1) * m_xAxisInterval;
+    m_numDisplayPoints = qCeil((m_xUpperLimit - m_xLowerLimit) / m_xAxisInterval);
 }
 
 void SweepChart::recalculateY()
@@ -209,7 +208,7 @@ void SweepChart::pushData(QQueue<double> *data)
         if(m_currentIndex == m_numDisplayPoints)
         {
             m_currentIndex = 0;
-            qDebug() << "m_currentIndex rollOver";
+            // qDebug() << "m_currentIndex rollOver";
         }
     }
     emit chartDataChanged();
