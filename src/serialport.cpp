@@ -43,11 +43,11 @@ void SerialPort::connectSerialPort()
 
     if (serial->open(QSerialPort::ReadWrite))
     {
+        qDebug() << "open";
         serial->clear();
     }
     else
     {
-
         delete serial;
         serial = nullptr;
     }
@@ -66,6 +66,8 @@ void SerialPort::readData()
 
         result.append(data.toInt());
     }
+
+    // qDebug() << result;
 
     emit packageChanged(result);
 }

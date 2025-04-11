@@ -35,6 +35,11 @@ double SweepChart::getXLowerLimit() const
     return m_xLowerLimit;
 }
 
+double SweepChart::getYLowerLimit() const
+{
+    return m_yLowerLimit;
+}
+
 int SweepChart::getNumDisplayPoints() const
 {
     return m_numDisplayPoints;
@@ -101,6 +106,8 @@ void SweepChart::recalculateX()
 void SweepChart::recalculateY()
 {
     m_yLowerLimit = m_origin.y();
+
+    qDebug() << "y" << m_yLowerLimit;
 
     m_yUpperLimit = (m_height_n_pixels) / m_ppi_y * 25.4 / m_sensitivity_mmPermV + m_yLowerLimit;
 }
