@@ -52,9 +52,8 @@ ChartView {
         tickAnchor: 0
 
         //критичный параметр
-        max: 4
         minorTickCount: 0
-        tickInterval: 1
+        tickInterval: 10
 
         //нужно для выравнивания графиков
         labelFormat: "%d"

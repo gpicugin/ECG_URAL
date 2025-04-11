@@ -25,12 +25,12 @@ AppEngine::AppEngine(QObject *parent)
 
 
     COMEmulationTimer->setInterval(40);
-    COMTimer->setInterval(40);
+    COMTimer->setInterval(1000);
     screenTimer->setInterval(40);
 
     connect(COMTimer, QTimer::timeout, port, SerialPort::readData);
-    connect(screenTimer, QTimer::timeout, this, AppEngine::updateScreen);
     connect(port, SerialPort::packageChanged, this, AppEngine::pushData);
+    connect(screenTimer, QTimer::timeout, this, AppEngine::updateScreen);
 
     port->connectSerialPort();
 
@@ -63,7 +63,9 @@ void AppEngine::updateScreen()
 {
     for(auto& channel : channels) {
         if(!channel.buffer.isEmpty())
+        {
             channel.chart->pushData(&channel.buffer);
+        }
     }
 }
 
@@ -78,9 +80,9 @@ void AppEngine::pushData(QVector<int> package)
     //         channels[0].buffer.enqueue( qSin(2*3.14*j/150.) + 6);
     //     }
     // }
-    qDebug() << package.size();
     for(auto number : package)
     {
         channels[0].buffer.enqueue(number);
     }
+
 }

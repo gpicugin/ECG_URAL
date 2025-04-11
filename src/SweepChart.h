@@ -65,7 +65,7 @@ protected:
     double            m_timeOfOnePoint;
 
 private:
-    QPointF m_origin        = QPointF(0,0);
+    QPointF m_origin        = QPointF(0,320);
     double  m_xAxisInterval = 1.0;
     double  m_xUpperLimit   = 0.0;
     double  m_xLowerLimit   = 0.0;

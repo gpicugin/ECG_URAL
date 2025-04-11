@@ -7,12 +7,10 @@
 SerialPort::SerialPort(QObject *parent)
     : QObject(parent)
 {
-
 }
 
 SerialPort::~SerialPort()
 {
-
     if (serial != nullptr)
     {
         if (serial->isOpen())
@@ -57,24 +55,19 @@ void SerialPort::connectSerialPort()
 
 void SerialPort::readData()
 {
-    QByteArray byteArrayData;
     QVector<int> result;
-
-    while (serial->bytesAvailable())
+    while (serial->bytesAvailable() > 10)
     {
-        byteArrayData = serial->readAll();
+        QString data = serial->readLine();
 
-        for (auto byte : byteArrayData)
-        {
-            QString data(byte);
-            result.append(data.toUInt());
-        }
+        // qDebug() << data;
 
-        emit packageChanged(result);
+        // qDebug() << data.toInt();
+
+        result.append(data.toInt());
     }
 
-    byteArrayData.clear();
-    result.clear();
+    emit packageChanged(result);
 }
 
 void SerialPort::writeData(QByteArray byteArrayData)
