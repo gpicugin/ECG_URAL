@@ -24,7 +24,7 @@ private:
     QSerialPort *serial = nullptr;
 
 signals:
-    void packageChanged(QVector<int>);
+    void packageChanged(QVector<double>);
 };
 
 #endif // SERIALPORT_H

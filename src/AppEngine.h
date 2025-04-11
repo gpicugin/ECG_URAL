@@ -41,7 +41,7 @@ private:
     SerialPort* port;
 
 private slots:
-    void pushData(QVector<int> package);
+    void pushData(QVector<double> package);
 
 signals:
 };

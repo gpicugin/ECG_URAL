@@ -96,7 +96,7 @@ void SweepChart::recalculateX()
 
     // double sweepRate_dPerSec = m_sweepRate_mmPerSec / 25.4;
 
-    m_xUpperLimit = (m_width_n_pixels / m_ppi_x * 25.4 / m_sweepRate_mmPerSec)+ m_xLowerLimit;
+    m_xUpperLimit = (m_width_n_pixels / m_ppi_x * 25.4 / m_sweepRate_mmPerSec) + m_xLowerLimit;
 
     //m_xUpperLimit /= 25;
 
@@ -106,8 +106,6 @@ void SweepChart::recalculateX()
 void SweepChart::recalculateY()
 {
     m_yLowerLimit = m_origin.y();
-
-    qDebug() << "y" << m_yLowerLimit;
 
     m_yUpperLimit = (m_height_n_pixels) / m_ppi_y * 25.4 / m_sensitivity_mmPermV + m_yLowerLimit;
 }

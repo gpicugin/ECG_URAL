@@ -50,7 +50,7 @@ protected:
     double            m_ppi_x              = 0;
     double            m_ppi_y              = 0;
     double            m_sweepRate_mmPerSec = 25;
-    double            m_sensitivity_mmPermV= 2.5;
+    double            m_sensitivity_mmPermV= 20;
 
     double            m_minSweep_mmPerSec  = 0;
     double            m_sampleRate_hz      = 0;
@@ -63,8 +63,8 @@ protected:
     double            m_timeOfOnePoint;
 
 private:
-    QPointF m_origin        = QPointF(0,325);
-    double  m_xAxisInterval = 1.0;
+    QPointF m_origin        = QPointF(0,0);
+    double  m_xAxisInterval = 2.0;
     double  m_xUpperLimit   = 0.0;
     double  m_xLowerLimit   = 0.0;
     double  m_yUpperLimit   = 0.0;

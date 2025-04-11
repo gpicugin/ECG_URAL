@@ -25,7 +25,14 @@ void SerialPort::connectSerialPort()
 {
     QString namePort;
 
-    namePort = QString("COM%1").arg(5);
+    const auto serialPortInfos = QSerialPortInfo::availablePorts();
+    if(serialPortInfos.size() != 0)
+        namePort = serialPortInfos.last().portName();
+    else
+    {
+        qDebug() << "NO_PORT";
+    }
+
 
     serial = new QSerialPort();
     serial->setPortName(namePort);
@@ -33,9 +40,7 @@ void SerialPort::connectSerialPort()
     serial->setDataBits(QSerialPort::Data8);
     serial->setParity(QSerialPort::NoParity);
     serial->setStopBits(QSerialPort::OneStop);
-    // serial->setReadBufferSize(1024 * 1024);
     serial->setFlowControl(QSerialPort::NoFlowControl);
-    //serial->open(QIODevice::ReadWrite);
 
     connect(serial, &QSerialPort::readyRead, this,  &SerialPort::readData);
     connect(serial, &QSerialPort::errorOccurred, this, &SerialPort::handleError);
@@ -55,7 +60,7 @@ void SerialPort::connectSerialPort()
 
 void SerialPort::readData()
 {
-    QVector<int> result;
+    QVector<double> result;
     while (serial->bytesAvailable() > 10)
     {
         QString data = serial->readLine();
@@ -64,7 +69,7 @@ void SerialPort::readData()
 
         // qDebug() << data.toInt();
 
-        result.append(data.toInt());
+        result.append(data.toDouble() / (350.0 / 2.3));
     }
 
     // qDebug() << result;

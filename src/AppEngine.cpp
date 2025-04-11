@@ -9,7 +9,7 @@ AppEngine::AppEngine(QObject *parent)
     params.ppi_x = QGuiApplication::primaryScreen()->logicalDotsPerInchX();
     params.ppi_y = QGuiApplication::primaryScreen()->logicalDotsPerInchY();
 
-    params.sampleRate_hz = 150;
+    params.sampleRate_hz = 150 * 1.3;
     params.minSweep_mm_per_s = 25;
 
     for(auto& channel : channels)
@@ -71,7 +71,7 @@ void AppEngine::updateScreen()
 
 static int j = 0;
 
-void AppEngine::pushData(QVector<int> package)
+void AppEngine::pushData(QVector<double> package)
 {
     // //for(auto& channel : channels)
     // {
