@@ -58,16 +58,18 @@ void SerialPort::connectSerialPort()
 void SerialPort::readData()
 {
     QByteArray byteArrayData;
-    QVector<int> result;
+    QVector<int32_t> result;
 
     while (serial->bytesAvailable())
     {
         byteArrayData = serial->readAll();
 
-        for (auto byte : byteArrayData)
-        {
-            QString data(byte);
-            result.append(data.toUInt());
+        for (int i = 0; i < byteArrayData.size(); i += sizeof(int32_t)) {
+            if (i + sizeof(int32_t) <= byteArrayData.size()) {
+                int32_t value;
+                memcpy(&value, byteArrayData.constData() + i, sizeof(int32_t));
+                result.append(value);
+            }
         }
 
         emit packageChanged(result);
