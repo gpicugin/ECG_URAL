@@ -12,15 +12,7 @@ void loop() {
     Serial.println('!');
   }
     else{
-    // send the value of analog input 0:
     Serial.println(analogRead(A0));
-    int32_t value = analogRead(A0);
-    
-    // Упаковываем данные в 4 байта и отправляем
-    Serial.write((uint8_t*)&value, sizeof(value));
     }
-     // Читаем значение с аналогового входа
-
-    //Wait for a bit to keep serial data from saturating
     delay(1);
 }
