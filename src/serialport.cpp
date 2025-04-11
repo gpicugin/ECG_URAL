@@ -1,6 +1,4 @@
-#include "serialport.h"
-#include "SerialPortGlobal.h"
-
+#include "SerialPort.h"
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
 
@@ -14,7 +12,6 @@ SerialPort::SerialPort(QObject *parent)
 
 SerialPort::~SerialPort()
 {
-
 
     if (serial != nullptr)
     {
@@ -30,11 +27,11 @@ void SerialPort::connectSerialPort()
 {
     QString namePort;
 
-    namePort = QString("COM%1").arg(NumSerialPort::COMMON);
+    namePort = QString("COM%1").arg(5);
 
     serial = new QSerialPort();
     serial->setPortName(namePort);
-    serial->setBaudRate(QSerialPort::Baud38400);
+    serial->setBaudRate(QSerialPort::Baud9600);
     serial->setDataBits(QSerialPort::Data8);
     serial->setParity(QSerialPort::NoParity);
     serial->setStopBits(QSerialPort::OneStop);
@@ -49,7 +46,6 @@ void SerialPort::connectSerialPort()
     if (serial->open(QSerialPort::ReadWrite))
     {
         serial->clear();
-
     }
     else
     {
@@ -59,34 +55,26 @@ void SerialPort::connectSerialPort()
     }
 }
 
-
 void SerialPort::readData()
 {
+    QByteArray byteArrayData;
+    QVector<int> result;
 
-
-    while (serial->bytesAvailable() >= SIZE_PACKAGE_COMMON)
+    while (serial->bytesAvailable())
     {
-        QByteArray byteArrayData = serial->read(1);
-        uint8_t firstByte = static_cast<uint8_t>(byteArrayData.at(0));
+        byteArrayData = serial->readAll();
 
-        //  if ((firstByte & 0x80) != 0x80)continue;
+        for (auto byte : byteArrayData)
+        {
+            QString data(byte);
+            result.append(data.toUInt());
+        }
 
-        byteArrayData = serial->read(1);
-        uint8_t secondByte = static_cast<uint8_t>(byteArrayData.at(0));
-
-
-
-
-        emit packageFormChange((firstByte << 8) | secondByte);
+        emit packageChanged(result);
     }
 
-    //    while (serial->bytesAvailable())
-    //    {
-    //        QByteArray byteArrayData = serial->read(1);
-    //        uint8_t firstByte = static_cast<uint8_t>(byteArrayData.at(0));
-
-
-    //    }
+    byteArrayData.clear();
+    result.clear();
 }
 
 void SerialPort::writeData(QByteArray byteArrayData)

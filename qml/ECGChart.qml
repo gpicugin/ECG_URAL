@@ -3,8 +3,14 @@ import QtQuick.Controls 2.0
 import QtCharts 2.15
 import QtQuick.Layouts 1.15
 import StyleSettings 1.0
+import SweepChart 1.0
 
 ChartView {
+    id: _view
+
+    property int sweepIndex
+
+    property SweepChart engine
 
     margins { right: 0; bottom: 0; left: 0; top: 0 }
 
@@ -19,13 +25,13 @@ ChartView {
         id: _axisX
 
         min: 0
+        max: 2
 
         tickType: ValueAxis.TicksDynamic
         tickAnchor: 0
 
-        max: 11.45
-        tickInterval: 4
         minorTickCount: 3
+        tickInterval: 4
 
         labelFormat: "%d c"
         labelsFont.pixelSize: Style.fontSizeLabelGraph
@@ -46,19 +52,19 @@ ChartView {
         tickAnchor: 0
 
         //критичный параметр
-        max: 3.9
-        minorTickCount: 4
-        tickInterval: 5
+        max: 4
+        minorTickCount: 0
+        tickInterval: 1
 
         //нужно для выравнивания графиков
-        labelFormat: "%d0"
+        labelFormat: "%d"
 
         labelsFont.pixelSize: Style.fontSizeLabelGraph
 
-        labelsColor:        Style.colorTextLabelGraphECG_Y
+        labelsColor:        Style.colorTextLabelGraphECG_X
         gridLineColor:      Style.colorGridLaynerECG
         minorGridLineColor: Style.colorGridLaynerECG
-        titleBrush:         Style.colorTextLabelGraphCO2
+        titleBrush:         Style.colorTextLabelGraphECG_X
     }
 
     LineSeries {
@@ -88,35 +94,36 @@ ChartView {
             color: Style.colorBackGraphECG
         }
     }
+    Component.onCompleted : {
+        engine = appEngine.getSweepChart(parent.sweepIndex)
+        print(_view.plotArea.width)
+        _axisX.max = engine.onXAxisWidthChanged(_view.plotArea.width)
+        _axisY.max = engine.onYAxisWidthChanged(_view.plotArea.height)
+    }
 
-    // Component.onCompleted: {
-    //     _axisX.max = GraphSPO2.onXAxisWidthChanged(_graphSPO2.plotArea.width)
-    // }
+    onWidthChanged: {
+        _axisX.max = engine.onXAxisWidthChanged(_view.plotArea.width)
+    }
+
+    onHeightChanged: {
+        _axisY.max = engine.onYAxisWidthChanged(_view.plotArea.height)
+
+    }
 
     Connections
     {
-        target: GraphSPO2
+        target: engine
 
         function onChartDataChanged()
         {
-            var index = GraphSPO2.getLine(_LineSeries1, _LineSeries2)
+            var index = engine.getLine(_LineSeries1, _LineSeries2)
+            var space = 25
 
-            _cursorLine.clear()
+            if(_LineSeries1.count >= space)
+                _LineSeries1.removePoints(_LineSeries1.count - space, space)
 
-            var space = _axisX.max / 50
-
-            if(index < _LineSeries1.count - space)
-            {
-                var point = _LineSeries1.at(index - 1)
-                _cursorLine.append(point.x, _axisY.max)
-
-                _cursorLine.append(point.x + (space), _axisY.max)
-            }
-        }
-
-        function onSetHSweepSPO2Changed(displayRange)
-        {
-            _axisX.max = displayRange
+            if(_LineSeries2.count >= space)
+                _LineSeries2.removePoints(0, space)
         }
 
         function onClearChart()

@@ -3,8 +3,9 @@ import QtQuick.Window 2.15
 import StyleSettings 1.0
 
 Window {
-    width: 640
-    height: 480
+    id: _mainWindow
+    width: Screen.width / 2
+    height: Screen.height / 2
     visible: true
     title: qsTr("Hello World")
 

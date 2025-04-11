@@ -3,6 +3,7 @@
 #include <QQmlContext>
 #include <QtQml>
 #include "AppEngine.h"
+#include "SweepChart.h"
 
 int main(int argc, char *argv[])
 {
@@ -12,7 +13,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     qmlRegisterSingletonType(QUrl("qrc:/qml/StyleSettings.qml"), "StyleSettings", 1, 0, "Style");
-
+    qmlRegisterType<SweepChart>("SweepChart", 1, 0, "SweepChart");
 
 
     QQmlApplicationEngine engine;
@@ -31,7 +32,7 @@ int main(int argc, char *argv[])
 
     AppEngine appEngine;
 
-    engine.rootContext()->setContextProperty("AppEngine", &appEngine);
+    engine.rootContext()->setContextProperty("appEngine", &appEngine);
 
     engine.load(url);
 

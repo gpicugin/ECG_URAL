@@ -3,9 +3,12 @@
 #include <QSerialPort>
 #include <QObject>
 
+class QSerialPort;
+
 class SerialPort : public QObject
 {
     Q_OBJECT
+
 public:
     SerialPort(QObject *parent = nullptr);
     ~SerialPort();
@@ -21,7 +24,7 @@ private:
     QSerialPort *serial = nullptr;
 
 signals:
-    void packageFormChange(uint16_t data);
+    void packageChanged(QVector<int>);
 };
 
 #endif // SERIALPORT_H

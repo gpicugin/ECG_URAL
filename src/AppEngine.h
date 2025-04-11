@@ -2,6 +2,7 @@
 #define APPENGINE_H
 #include "SweepChart.h"
 #include "SweepChartBuffer.h"
+#include "serialport.h"
 #include <QTimer>
 #include <QObject>
 /*
@@ -15,7 +16,7 @@
 */
 struct Sweep {
     SweepChart* chart;
-    QQueue<double>* buffer;
+    QQueue<double> buffer;
 };
 
 enum ECG_channels {
@@ -33,14 +34,22 @@ class AppEngine : public QObject
     Q_OBJECT
 public:
     explicit AppEngine(QObject *parent = nullptr);
+    ~AppEngine();
+
+public slots:
+    SweepChart *getSweepChart(int index);
+    void updateScreen();
 
 private:
     QVector<Sweep> channels;
 
     QTimer* COMEmulationTimer;
+    QTimer* COMTimer;
+    QTimer* screenTimer;
+    SerialPort* port;
 
 private slots:
-    pushData();
+    void pushData(QVector<int> package);
 
 signals:
 };

@@ -6,21 +6,18 @@ QT += quick gui core widgets qml charts serialport multimedia
 
 HEADERS += \
     src/AppEngine.h \
-    src/ECGGlobal.h \
-    src/SerialPortGlobal.h \
     src/SweepChart.h \
     src/SweepChartBuffer.h \
-    src/serialport.h \
-    src/serialportecg.h
+    src/serialport.h
 
 
 SOURCES += \
-    src/serialport.cpp \
-    src/serialportecg.cpp
     src/AppEngine.cpp \
     src/SweepChart.cpp \
     src/SweepChartBuffer.cpp \
-    main.cpp
+    src/main.cpp \
+    src/serialport.cpp
+
 
 RESOURCES += qml.qrc
 
@@ -41,5 +38,3 @@ OBJECTS_DIR = $$build_dir/trash/obj
 MOC_DIR     = $$build_dir/trash/moc
 RCC_DIR     = $$build_dir/trash/rcc
 UI_DIR      = $$build_dir/trash/ui
-
-

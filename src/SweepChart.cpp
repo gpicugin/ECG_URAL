@@ -4,9 +4,10 @@
 SweepChart::SweepChart(QObject *parent, InitialParamsOfChart* params)
     :   m_minSweep_mmPerSec(params->minSweep_mm_per_s),
         m_xAxisInterval(1 / params->sampleRate_hz),
-        m_ppi(params->ppi)
+        m_ppi_x(params->ppi_x),
+        m_ppi_y(params->ppi_y)
 {
-    qDebug() << "HERE Sweep";
+    // qDebug() << m_xAxisInterval;
     m_pPoints = new QVector<QPointF>;    
 }
 
@@ -86,14 +87,24 @@ void SweepChart::recalculateX()
 {
     m_xLowerLimit = m_origin.x();
 
-    m_xUpperLimit = (m_width_n_pixels - 1) / m_ppi * 25.4 / m_sweepRate_mmPerSec + m_xLowerLimit;
+    // qDebug() << m_width_n_pixels << m_ppi_x << m_sweepRate_mmPerSec << m_xLowerLimit;
 
-    m_numDisplayPoints = qCeil((m_xUpperLimit - m_xLowerLimit) / m_xAxisInterval) + 2;
+    // double sweepRate_dPerSec = m_sweepRate_mmPerSec / 25.4;
 
-    while((m_numDisplayPoints - 1) * m_xAxisInterval - m_xUpperLimit > m_xAxisInterval)
-        m_numDisplayPoints--;
+    m_xUpperLimit = (m_width_n_pixels / m_ppi_x * 25.4 / m_sweepRate_mmPerSec); // + m_xLowerLimit;
 
-    m_xUpperLimit = (m_numDisplayPoints - 1) * m_xAxisInterval;
+    //m_xUpperLimit /= 25;
+
+    // qDebug() << m_xUpperLimit;
+
+    m_numDisplayPoints = qCeil((m_xUpperLimit - m_xLowerLimit) / m_xAxisInterval);
+}
+
+void SweepChart::recalculateY()
+{
+    m_yLowerLimit = m_origin.y();
+
+    m_yUpperLimit = (m_height_n_pixels - 1) / m_ppi_y * 25.4 / m_sensitivity_mmPermV + m_yLowerLimit;
 }
 
 void SweepChart::startUpdateChart()
@@ -119,17 +130,30 @@ double SweepChart::onXAxisWidthChanged(int pixels)
 
     m_pPoints->clear();
 
-    if(m_pPoints->size() < m_numDisplayPoints);
-    {
-        QQueue<double> data;
-        for(int i = 0; i < m_numDisplayPoints - m_pPoints->size(); i++)
-            data.enqueue(m_origin.y());
-        pushData(&data);
-    }
+    // if(m_pPoints->size() < m_numDisplayPoints);
+    // {
+    //     QQueue<double> data;
+    //     for(int i = 0; i < m_numDisplayPoints - m_pPoints->size(); i++)
+    //         data.enqueue(m_origin.y());
+    //     pushData(&data);
+    // }
 
     emit chartDataChanged();
 
     return m_xUpperLimit;
+}
+
+double SweepChart::onYAxisWidthChanged(int pixels)
+{
+    m_height_n_pixels = pixels;
+
+    recalculateY();
+
+    m_pPoints->clear();
+
+    emit chartDataChanged();
+
+    return m_yUpperLimit;
 }
 
 void SweepChart::onSweepRateChanged(double mm_per_s)
@@ -160,7 +184,7 @@ void SweepChart::pushData(QQueue<double> *data)
         (*m_pPoints).append(point);
 
         for(int i = 0; i < data->size(); i++)
-            emit onRollOver();
+            emit rollOver();
 
         emit chartDataChanged();
 
@@ -171,7 +195,7 @@ void SweepChart::pushData(QQueue<double> *data)
     {
         if(m_currentIndex == 0 && m_pPoints->size() != 0)
         {
-            emit onRollOver();
+            emit rollOver();
         }
 
         if(m_pPoints->size() <= m_currentIndex)
@@ -184,7 +208,7 @@ void SweepChart::pushData(QQueue<double> *data)
         if(m_currentIndex == m_numDisplayPoints)
         {
             m_currentIndex = 0;
-            qDebug() << "m_currentIndex rollOver";
+            // qDebug() << "m_currentIndex rollOver";
         }
     }
     emit chartDataChanged();
@@ -192,8 +216,10 @@ void SweepChart::pushData(QQueue<double> *data)
 
 int SweepChart::getLine(QtCharts::QLineSeries *lineSeries1, QtCharts::QLineSeries *lineSeries2)
 {
-    if(lineSeries1 == nullptr || lineSeries2 == nullptr)
+    if(lineSeries1 == nullptr || lineSeries2 == nullptr) {
+        qDebug() << "return 0";
         return 0;
+    }
 
     // критерий
     if(m_numDisplayPoints != 1)
@@ -215,5 +241,6 @@ int SweepChart::getLine(QtCharts::QLineSeries *lineSeries1, QtCharts::QLineSerie
         lineSeries1->append(m_origin);
         lineSeries2->clear();
     }
+
     return m_currentIndex;
 }
