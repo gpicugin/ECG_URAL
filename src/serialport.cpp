@@ -1,7 +1,7 @@
 #include "SerialPort.h"
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
-
+#include <QFile>
 #include <QDebug>
 
 SerialPort::SerialPort(QObject *parent)
@@ -24,15 +24,27 @@ SerialPort::~SerialPort()
 void SerialPort::connectSerialPort()
 {
     QString namePort;
+    QString txt;
 
-    const auto serialPortInfos = QSerialPortInfo::availablePorts();
-    if(serialPortInfos.size() != 0)
-        namePort = serialPortInfos.last().portName();
+    QFile inFile("COM.txt");
+    inFile.open(QIODevice::ReadOnly | QIODevice::Append);
+    QTextStream ts(&inFile);
+
+    if(ts.readAll().size() == 0)
+    {
+        const auto serialPortInfos = QSerialPortInfo::availablePorts();
+
+        if(serialPortInfos.size() != 0)
+            namePort = serialPortInfos.last().portName();
+        else
+        {
+            qDebug() << "NO_PORT";
+        }
+    }
     else
     {
-        qDebug() << "NO_PORT";
+        namePort = ts.readAll();
     }
-
 
     serial = new QSerialPort();
     serial->setPortName(namePort);
