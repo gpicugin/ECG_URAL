@@ -34,9 +34,7 @@ public:
     ~SweepChart();
     void    setOrigin(QPointF point);
     double  getXUpperLimit() const;
-    double  getXLowerLimit() const;
     double  getYUpperLimit() const;
-    double  getYLowerLimit() const;
     int     getSize()             const;
     double  getXAxisInterval()    const;
     void    xShiftTo(double xCoord);
@@ -66,7 +64,7 @@ protected:
 
 private:
     QPointF m_origin        = QPointF(0,0);
-    double  m_xAxisInterval = 1.0;
+    double  m_xAxisInterval = 2.0;
     double  m_xUpperLimit   = 0.0;
     double  m_xLowerLimit   = 0.0;
     double  m_yUpperLimit   = 0.0;
@@ -79,6 +77,9 @@ private:
     void recalculateY();
 
 public slots:
+    double  getXLowerLimit() const;
+    double  getYLowerLimit() const;
+
     void pushData(QQueue<double> *data);
     void startUpdateChart();
     void stopUpdateChart();

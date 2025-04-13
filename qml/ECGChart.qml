@@ -46,13 +46,10 @@ ChartView {
     {
         id: _axisY
 
-        min: 0
-
         tickType: ValueAxis.TicksDynamic
         tickAnchor: 0
 
         //критичный параметр
-        max: 4
         minorTickCount: 0
         tickInterval: 1
 
@@ -96,9 +93,10 @@ ChartView {
     }
     Component.onCompleted : {
         engine = appEngine.getSweepChart(parent.sweepIndex)
-        print(_view.plotArea.width)
-        _axisX.max = engine.onXAxisWidthChanged(_view.plotArea.width)
         _axisY.max = engine.onYAxisWidthChanged(_view.plotArea.height)
+        _axisY.min = engine.getYLowerLimit()
+        print(_axisY.min)
+        _axisX.max = engine.onXAxisWidthChanged(_view.plotArea.width)
     }
 
     onWidthChanged: {

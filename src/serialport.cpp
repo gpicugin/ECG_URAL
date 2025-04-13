@@ -7,12 +7,10 @@
 SerialPort::SerialPort(QObject *parent)
     : QObject(parent)
 {
-
 }
 
 SerialPort::~SerialPort()
 {
-
     if (serial != nullptr)
     {
         if (serial->isOpen())
@@ -27,7 +25,14 @@ void SerialPort::connectSerialPort()
 {
     QString namePort;
 
-    namePort = QString("COM%1").arg(5);
+    const auto serialPortInfos = QSerialPortInfo::availablePorts();
+    if(serialPortInfos.size() != 0)
+        namePort = serialPortInfos.last().portName();
+    else
+    {
+        qDebug() << "NO_PORT";
+    }
+
 
     serial = new QSerialPort();
     serial->setPortName(namePort);
@@ -35,9 +40,7 @@ void SerialPort::connectSerialPort()
     serial->setDataBits(QSerialPort::Data8);
     serial->setParity(QSerialPort::NoParity);
     serial->setStopBits(QSerialPort::OneStop);
-    // serial->setReadBufferSize(1024 * 1024);
     serial->setFlowControl(QSerialPort::NoFlowControl);
-    //serial->open(QIODevice::ReadWrite);
 
     connect(serial, &QSerialPort::readyRead, this,  &SerialPort::readData);
     connect(serial, &QSerialPort::errorOccurred, this, &SerialPort::handleError);
@@ -45,11 +48,11 @@ void SerialPort::connectSerialPort()
 
     if (serial->open(QSerialPort::ReadWrite))
     {
+        qDebug() << "open";
         serial->clear();
     }
     else
     {
-
         delete serial;
         serial = nullptr;
     }
@@ -57,26 +60,19 @@ void SerialPort::connectSerialPort()
 
 void SerialPort::readData()
 {
-    QByteArray byteArrayData;
-    QVector<int32_t> result;
-
-    while (serial->bytesAvailable())
+    QVector<double> result;
+    while (serial->bytesAvailable() > 10)
     {
-        byteArrayData = serial->readAll();
+        QString data = serial->readLine();
 
-        for (int i = 0; i < byteArrayData.size(); i += sizeof(int32_t)) {
-            if (i + sizeof(int32_t) <= byteArrayData.size()) {
-                int32_t value;
-                memcpy(&value, byteArrayData.constData() + i, sizeof(int32_t));
-                result.append(value);
-            }
-        }
+        // qDebug() << data.toInt();
 
-        emit packageChanged(result);
+        result.append(data.toDouble() / (350.0 / 2.3));
     }
 
-    byteArrayData.clear();
-    result.clear();
+    // qDebug() << result;
+
+    emit packageChanged(result);
 }
 
 void SerialPort::writeData(QByteArray byteArrayData)

@@ -2,7 +2,7 @@
 #define SERIALPORT_H
 #include <QSerialPort>
 #include <QObject>
-
+#include <QBuffer>
 class QSerialPort;
 
 class SerialPort : public QObject
@@ -24,7 +24,7 @@ private:
     QSerialPort *serial = nullptr;
 
 signals:
-    void packageChanged(QVector<int>);
+    void packageChanged(QVector<double>);
 };
 
 #endif // SERIALPORT_H
